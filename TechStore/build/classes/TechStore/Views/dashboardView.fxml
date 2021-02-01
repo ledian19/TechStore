@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="870.0" prefWidth="1123.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cskims.View_Controller.MainPageController">
+   <children>
+      <AnchorPane fx:id="transactionsAnchor" layoutX="48.0" layoutY="85.0" prefHeight="332.0" prefWidth="1030.0" style="-fx-background-color: white;">
+         <children>
+            <Label fx:id="lblProducts1" layoutX="14.0" layoutY="14.0" text="Transactions" />
+            <TableView fx:id="tvTransactions" layoutX="14.0" layoutY="39.0" prefHeight="212.0" prefWidth="996.0">
+               <columns>
+                  <TableColumn fx:id="billProductNameColumn" prefWidth="75.0" text="Product Name" />
+                  <TableColumn fx:id="billPriceColumn" prefWidth="75.0" text="Price" />
+                  <TableColumn fx:id="billQuantityColumn" prefWidth="75.0" text="Quantity" />
+                  <TableColumn fx:id="billTotalColumn" prefWidth="75.0" text="Total" />
+               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <TextField fx:id="txtTransactionSearch" layoutX="789.0" layoutY="10.0" prefHeight="25.0" prefWidth="222.0" />
+            <Button fx:id="btnProductsSearch1" layoutX="720.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleTransactionSearch" text="Search" />
+            <ButtonBar layoutX="212.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" />
+            <Button fx:id="btnAddTransaction" layoutX="790.0" layoutY="280.0" mnemonicParsing="false" onAction="#handleTransactionAdd" text="Add" />
+            <Button fx:id="btnModifyTransaction" layoutX="865.0" layoutY="280.0" mnemonicParsing="false" onAction="#handleModifyTransaction" text="Modify" />
+            <Button fx:id="btnTransactionDelete" layoutX="954.0" layoutY="280.0" mnemonicParsing="false" onAction="#handleTransactionDelete" text="Delete" />
+            <Button fx:id="btnGenerateStatistics" layoutX="649.0" layoutY="280.0" mnemonicParsing="false" onAction="#handleGenerateStatistics" text="Generate Statistics" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="productsAnchor" layoutX="50.0" layoutY="454.0" prefHeight="332.0" prefWidth="495.0" style="-fx-background-color: white;">
+         <children>
+            <Label fx:id="lblParts" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Products" />
+            <TableView fx:id="tvProducts" layoutX="14.0" layoutY="39.0" prefHeight="212.0" prefWidth="463.0">
+              <columns>
+                <TableColumn fx:id="productIdColumn" prefWidth="75.0" text="Product ID" />
+                <TableColumn fx:id="productsNameColumn" prefWidth="75.0" text="Product Name" />
+                  <TableColumn fx:id="productPriceColumn" prefWidth="75.0" text="Product Price" />
+                  <TableColumn fx:id="productStockColumn" prefWidth="75.0" text="Stock" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <TextField fx:id="txtProductsSearch" layoutX="229.0" layoutY="10.0" prefHeight="25.0" prefWidth="248.0" />
+            <Button fx:id="btnProductsSearch" layoutX="160.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleProductsSearch" text="Search" />
+            <ButtonBar layoutX="212.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" />
+          <Button fx:id="btnProductsAdd" layoutX="248.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleProductsAdd" text="Add" />
+            <Button fx:id="btnPartDelete" layoutX="412.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleProductsDelete" text="Delete" />
+            <Button fx:id="btnProductsModify" layoutX="326.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleProductsModify" text="Modify" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="50.0" layoutY="21.0" prefHeight="40.0" prefWidth="269.0" style="-fx-font-weight: bold;" text="TechStore Management System">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="employeesAnchor" layoutX="580.0" layoutY="454.0" prefHeight="332.0" prefWidth="495.0" style="-fx-background-color: white;">
+         <children>
+            <Label fx:id="lblProducts" layoutX="14.0" layoutY="14.0" text="Employees" />
+            <TableView fx:id="tvEmployees" layoutX="14.0" layoutY="39.0" prefHeight="212.0" prefWidth="463.0">
+               <columns>
+                  <TableColumn fx:id="employeeIdColumn" prefWidth="75.0" text="E.ID" />
+                  <TableColumn fx:id="employeeNameColumn" prefWidth="75.0" text="Full Name" />
+                  <TableColumn fx:id="employeeRoleColumn" prefWidth="75.0" text="Role" />
+                  <TableColumn fx:id="employeeSalaryColumn" prefWidth="75.0" text="Salary" />
+                  <TableColumn fx:id="employeePhoneColumn" prefWidth="75.0" text="Phone" />
+                  <TableColumn fx:id="employeeEmailColumn" prefWidth="75.0" text="Email" />
+                  <TableColumn fx:id="employeeBirthdayColumn" prefWidth="75.0" text="Birthday" />
+               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <TextField fx:id="txtEmployeeSearch" layoutX="255.0" layoutY="10.0" prefHeight="25.0" prefWidth="222.0" />
+            <Button fx:id="btnEmployeesSearch" layoutX="186.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleEmployeeSearch" text="Search" />
+            <ButtonBar layoutX="212.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" />
+            <Button fx:id="btnEmployeeAdd" layoutX="251.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleEmployeeAdd" text="Add" />
+            <Button fx:id="btnEmployeeModify" layoutX="336.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleEmployeeModify" text="Modify" />
+            <Button fx:id="btnEmployeeDelete" layoutX="421.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleEmployeeDelete" text="Delete" />
+         </children>
+      </AnchorPane>
+      <Button fx:id="btnLogout" layoutX="971.0" layoutY="21.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="107.0" text="Log out">
+         <font>
+            <Font name="Calibri Bold" size="18.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

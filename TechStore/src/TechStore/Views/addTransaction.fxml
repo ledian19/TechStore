@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cskims.View_Controller.AddPartController">
+   <children>
+      <Label fx:id="lblAddPart" layoutX="14.0" layoutY="14.0" text="Add Part" />
+      <TextField fx:id="txtProductId" disable="true" layoutX="112.0" layoutY="48.0" text="Auto Gen - Disabled" />
+      <TextField fx:id="txtProductName" layoutX="112.0" layoutY="84.0" />
+      <TextField fx:id="txtPrice" layoutX="112.0" layoutY="117.0" />
+      <Label fx:id="lblID" layoutX="20.0" layoutY="52.0" text="ID" />
+      <Label fx:id="lblName" layoutX="20.0" layoutY="88.0" text="Product Name" />
+      <Label fx:id="lblPrice" layoutX="18.0" layoutY="121.0" text="Price/Cost" />
+      <TextField fx:id="txtQuantity" layoutX="112.0" layoutY="155.0" />
+      <Label fx:id="lblQuantity" layoutX="18.0" layoutY="159.0" text="Quantity" />
+      <ButtonBar layoutX="87.0" layoutY="254.0" prefHeight="40.0" prefWidth="200.0">
+        <buttons>
+            <Button fx:id="btnSave" defaultButton="true" mnemonicParsing="false" onAction="#handleTransactionSave" text="Save" />
+          <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleTransactionCancel" text="Cancel" />
+        </buttons>
+      </ButtonBar>
+   </children>
+</AnchorPane>
