@@ -1,5 +1,7 @@
 package TechStore.Controller;
 
+import static TechStore.Controller.LoginViewController.readAllUsersFromFile;
+import static TechStore.Controller.LoginViewController.writeUsersToFile;
 import TechStore.Model.Bill;
 import static TechStore.Model.Bill.allBills;
 import static TechStore.Model.Bill.deleteBill;
@@ -7,7 +9,12 @@ import static TechStore.Model.Bill.getAllBills;
 import static TechStore.Model.Bill.lookupTransaction;
 import TechStore.Model.Product;
 import static TechStore.Model.Product.allProducts;
+import static TechStore.Model.Product.deleteProduct;
+import static TechStore.Model.Product.lookupProduct;
 import TechStore.Model.User;
+import static TechStore.Model.User.allUsers;
+import static TechStore.Model.User.deleteUser;
+import static TechStore.Model.User.lookupUser;
 import TechStore.Views.MainPageView;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -20,6 +27,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -37,29 +45,38 @@ import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MainPageController extends MainPageView implements Initializable {
-
-    public static final String pathName = "src/resources/transactions.ser";
     
-    public static Bill modifyBill;
     public static int modifyBillIndex;
-    private User user;
+    public static int modifyProductIndex;
+    public static int modifyUserIndex;
+    
+    private final User user;
 
     public MainPageController(User user) {
         super(user.getUserLevel());
         this.user = user;
+        
         billTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
         billProductNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         billPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         billQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         
-        
-        productIdColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        productCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         productsNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         productStockColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
         
+        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        employeeUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        employeeRoleColumn.setCellValueFactory(new PropertyValueFactory<>("userLevel"));
+        employeeSalaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        employeePhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNo"));
+        employeeEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        employeeBirthdayColumn.setCellValueFactory(new PropertyValueFactory<>("birthday"));
+        
         readAllTransactionsFromFile();
         readAllProductsFromFile();
+        updateUsersTableView();
     }
 
     @Override
@@ -104,7 +121,7 @@ public class MainPageController extends MainPageView implements Initializable {
             alert.setContentText("Please ensure a bill is selected to be updated.");
             alert.showAndWait();
         } else {
-            modifyBill = (Bill) tvTransactions.getSelectionModel().getSelectedItem();
+            Bill modifyBill = (Bill) tvTransactions.getSelectionModel().getSelectedItem();
             modifyBillIndex = getAllBills().indexOf(modifyBill);
             ModifyBillController modifyBillParent = new ModifyBillController(user, modifyBill.getName(), modifyBill.getPrice(), modifyBill.getQuantity());
             Scene modifyBillScene = new Scene(modifyBillParent);
@@ -151,7 +168,7 @@ public class MainPageController extends MainPageView implements Initializable {
     
     private void readAllTransactionsFromFile() {
         try {
-            File uf = new File(pathName);
+            File uf = new File("src/resources/transactions.ser");
             FileInputStream file = new FileInputStream(uf);
             BufferedInputStream buffer = new BufferedInputStream(file);
             ObjectInputStream input = new ObjectInputStream(buffer);
@@ -172,7 +189,7 @@ public class MainPageController extends MainPageView implements Initializable {
 
     public static void writeTransactionsToFile() {
         try {            
-            File f = new File(pathName);
+            File f = new File("src/resources/transactions.ser");
             FileOutputStream fl = new FileOutputStream(f);
             BufferedOutputStream bf = new BufferedOutputStream(fl);
             ObjectOutput output = new ObjectOutputStream(bf);
@@ -193,7 +210,7 @@ public class MainPageController extends MainPageView implements Initializable {
             
             ArrayList<Product> list = (ArrayList<Product>) input.readObject();
             allProducts = FXCollections.observableList(list);
-            updateBillTableView();
+            updateProductsTableView();
             file.close();
             buffer.close();
             input.close();
@@ -202,7 +219,6 @@ public class MainPageController extends MainPageView implements Initializable {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        updateProductsTableView();
     }
 
     public static void writeProductsToFile() {
@@ -229,31 +245,37 @@ public class MainPageController extends MainPageView implements Initializable {
         tvProducts.setItems(allProducts);
     }
 
+    public void updateUsersTableView() {
+        tvEmployees.setItems(allUsers);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
     }
 
     @Override
-    protected void handleGenerateStatistics(ActionEvent actionEvent) {
-        double total=0;
-        String user="";
-        for(int i=0; i<allBills.size();i++){
-            user=allBills.get(i).getUsername();
-            if ("admin".equals(user)){
-                total += allBills.get(i).getTotal();
-            }
-        }
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Status");
-        alert.setHeaderText("Total amount made" );
-        alert.setContentText("Total: " + total);
-        alert.showAndWait();
-    }
-
-    @Override
     protected void handleProductsSearch(ActionEvent actionEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String search = txtProductsSearch.getText();
+        int productIndex = -1;
+        if("".equals(search)){
+            readAllProductsFromFile();
+            return;
+        }
+        productIndex = lookupProduct(search);
+        if (productIndex == -1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Search Error");
+            alert.setHeaderText("Product not found!");
+            alert.setContentText("Search term does not match any known products.");
+            alert.showAndWait();
+        } else {
+            Product tempP = allProducts.get(productIndex);
+            ObservableList<Product> tempList = FXCollections.observableArrayList();
+            tempList.add(tempP);
+            tvProducts.setItems(tempList);
+
+        }
     }
 
     @Override
@@ -268,32 +290,182 @@ public class MainPageController extends MainPageView implements Initializable {
 
     @Override
     protected void handleProductsDelete(ActionEvent actionEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (tvProducts.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error deleting product!");
+            alert.setContentText("Please ensure a product is selected to be removed.");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete");
+            alert.setHeaderText("Confirm Delete");
+            alert.setContentText("Are you sure you wish to delete the product?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Product p = (Product) tvProducts.getSelectionModel().getSelectedItem();
+                deleteProduct(p);
+                writeProductsToFile();
+                updateProductsTableView();
+            }
+        }
     }
 
     @Override
     protected void handleProductsModify(ActionEvent actionEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (tvProducts.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error updating bill!");
+            alert.setContentText("Please ensure a bill is selected to be updated.");
+            alert.showAndWait();
+        } else {
+            Product modifyProduct = (Product) tvProducts.getSelectionModel().getSelectedItem();
+            modifyProductIndex = allProducts.indexOf(modifyProduct);
+            ModifyProductController modifyProductParent = new ModifyProductController(user, modifyProduct.getCategory(), modifyProduct.getName(), modifyProduct.getPrice(), modifyProduct.getQuantity());
+            Scene modifyProductScene = new Scene(modifyProductParent);
+            Stage modifyProductStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            modifyProductStage.setScene(modifyProductScene);
+            modifyProductStage.show();
+        }
     }
 
     @Override
     protected void handleEmployeeSearch(ActionEvent actionEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String search = txtEmployeeSearch.getText();
+        int userIndex = -1;
+        if("".equals(search)){
+            readAllUsersFromFile();
+            updateUsersTableView();
+            return;
+        }
+        
+        userIndex=lookupUser(search);
+        
+        if (userIndex == -1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Search Error");
+            alert.setHeaderText("User not found!");
+            alert.setContentText("Search term does not match any known users.");
+            alert.showAndWait();
+        } else {
+            User tempU = allUsers.get(userIndex);
+            ObservableList<User> tempUserList = FXCollections.observableArrayList();
+            tempUserList.add(tempU);
+            tvEmployees.setItems(tempUserList);
+        }
     }
 
     @Override
     protected void handleEmployeeAdd(ActionEvent actionEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AddUsersController addUserParent = new AddUsersController(user);
+
+        Scene addUserScene = new Scene(addUserParent);
+        Stage addUserStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        addUserStage.setScene(addUserScene);
+        addUserStage.show();
     }
 
     @Override
     protected void handleEmployeeModify(ActionEvent actionEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (tvEmployees.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error updating user!");
+            alert.setContentText("Please ensure a user is selected to be updated.");
+            alert.showAndWait();
+        } else {
+            User modifyUser = (User) tvEmployees.getSelectionModel().getSelectedItem();
+            modifyUserIndex = allUsers.indexOf(modifyUser);
+            ModifyUserController modifyUserParent = new ModifyUserController(user, modifyUser);
+            Scene modifyUserScene = new Scene(modifyUserParent);
+            Stage modifyUserStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            modifyUserStage.setScene(modifyUserScene);
+            modifyUserStage.show();
+        }
     }
 
     @Override
     protected void handleEmployeeDelete(ActionEvent actionEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (tvEmployees.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error deleting user!");
+            alert.setContentText("Please ensure a user is selected to be removed.");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete");
+            alert.setHeaderText("Confirm Delete");
+            alert.setContentText("Are you sure you wish to delete the user?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                User u = (User) tvEmployees.getSelectionModel().getSelectedItem();
+                deleteUser(u);
+                writeUsersToFile();
+                updateUsersTableView();
+            }
+        }
     }
+
+    public static ArrayList<Date> getThisWeekDates(){
+        ArrayList<Date> days = new ArrayList<>();
+        Date today= new Date();
+        int t = today.getDay();
+        for (int i=t; i>0; i--){
+            Date newDate = new Date();
+            newDate.setDate(i);
+            days.add(newDate);
+        }
+        return days;
+    }
+    
+    public static Boolean dateFound(Date d, ArrayList<Date> dates){
+        for(Date dt : dates){
+            if (dt.getDate()==d.getDate() && dt.getYear()==d.getYear() && dt.getMonth()==d.getMonth()){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    protected void handleGenerateStatistics(ActionEvent actionEvent) {
+        double total=0;
+        double thisWeekTotal=0;
+        ArrayList<Date> thisWeekDays = getThisWeekDates();
+        for(int i=0; i<allBills.size();i++){
+            if (dateFound(allBills.get(i).getDate(), thisWeekDays)){
+                thisWeekTotal += allBills.get(i).getTotal();
+            }
+            total += allBills.get(i).getTotal();
+        }
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Status");
+        alert.setHeaderText("Total amount made" );
+        alert.setContentText("Total: " + total + "\n " + "Total made this week: " + thisWeekTotal);
+        alert.showAndWait();
+    }
+
+    @Override
+    protected void handleGenerateProductsStatistics(ActionEvent actionEvent) {
+        double total=0;
+        double thisWeekTotal=0;
+        ArrayList<Date> thisWeekDays = getThisWeekDates();
+        for(int i=0; i<allProducts.size();i++){
+            if (dateFound(allProducts.get(i).getDate(), thisWeekDays)){
+                thisWeekTotal += allProducts.get(i).getPrice() * allProducts.get(i).getQuantity();
+            }
+            total += allProducts.get(i).getPrice() * allProducts.get(i).getQuantity();
+        }
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Status");
+        alert.setHeaderText("Total amount spent" );
+        alert.setContentText("Total: " + total + "\n " + "Total spent this week: " + thisWeekTotal);
+        alert.showAndWait();
+    }
+    
 
 }

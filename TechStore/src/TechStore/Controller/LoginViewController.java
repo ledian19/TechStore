@@ -1,6 +1,7 @@
 package TechStore.Controller;
 
 import TechStore.Model.User;
+import static TechStore.Model.User.allUsers;
 import TechStore.Views.LoginView;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -9,10 +10,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -21,9 +27,7 @@ import javafx.stage.Stage;
 
 public class LoginViewController extends LoginView implements Initializable {
 
-    public ArrayList<User> allUsers = new ArrayList<User>();
-
-    public LoginViewController(){
+    public LoginViewController(){        
         readAllUsersFromFile();
     }
     
@@ -46,47 +50,34 @@ public class LoginViewController extends LoginView implements Initializable {
         return false;
     }
 
-    private void readAllUsersFromFile() {
+    public static void readAllUsersFromFile() {
         try {
             File uf = new File("src/resources/users.ser");
             FileInputStream file = new FileInputStream(uf);
             BufferedInputStream buffer = new BufferedInputStream(file);
             ObjectInputStream input = new ObjectInputStream(buffer);
-            allUsers = (ArrayList<User>) input.readObject();
-            for (User user : allUsers) {
-                System.out.println("Data: " + user.getUsername() + "-" + user.getPassword());
-            }
+            
+            ArrayList<User> list = (ArrayList<User>) input.readObject();
+            allUsers = FXCollections.observableList(list);
             file.close();
             buffer.close();
             input.close();
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Not found. Creating new file"
-                    + ex.toString());
-            addUser(new User("admin", "admin", 1));
         } catch (IOException ex) {
             System.out.println("Cannot perform input." + ex.toString());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainPageController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    //TODO
-    public void writeUsersToFile() {
-        try {
-            User lg = new User("admin", "admin", 1);
-            User lg2 = new User("manager", "manager", 2);
-            User lg3 = new User("employee", "employee", 3);
-
-            allUsers.add(lg);
-            allUsers.add(lg2);
-            allUsers.add(lg3);
-            
-            File uf = new File("src/resources/users.ser");
-            FileOutputStream fl = new FileOutputStream(uf);
+   
+    public static void writeUsersToFile() {
+        try {            
+            File f = new File("src/resources/users.ser");
+            FileOutputStream fl = new FileOutputStream(f);
             BufferedOutputStream bf = new BufferedOutputStream(fl);
-            ObjectOutputStream output = new ObjectOutputStream(bf);
-            output.writeObject(allUsers);
-            fl.close();
+            ObjectOutput output = new ObjectOutputStream(bf);
+            output.writeObject(new ArrayList<>(allUsers));
             bf.close();
-            output.close();
+            fl.close();
         } catch (IOException ex) {
             System.out.println("Cannot perform output." + ex.toString());
         }
@@ -101,13 +92,12 @@ public class LoginViewController extends LoginView implements Initializable {
         return null;
     }
 
-    public ArrayList<User> getAllUsers() {
+    public ObservableList<User> getAllUsers() {
         return allUsers;
     }
 
     public void addUser(User user) {
         allUsers.add(user);
-        writeUsersToFile();
     }
 
     public void deleteUser(User user) {

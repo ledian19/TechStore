@@ -54,7 +54,7 @@ public abstract class LoginView extends AnchorPane {
         btnLogin.setPrefWidth(63.0);
         btnLogin.setText("Login");
         btnLogin.setOnAction(this::handleLogin);
-
+        
         lblErrorMessage.setAlignment(javafx.geometry.Pos.CENTER);
         lblErrorMessage.setLayoutX(12.0);
         lblErrorMessage.setLayoutY(298.0);

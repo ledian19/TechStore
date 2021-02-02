@@ -1,11 +1,11 @@
 package TechStore.Model;
 
-import static TechStore.Model.Bill.allBills;
+import java.io.Serializable;
 import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class Product {
+public class Product implements Serializable{
     
     public static ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
@@ -14,7 +14,7 @@ public class Product {
     private String username;
     private Date dateAdded;
     private Double price;
-    private int inStock;
+    private int quantity;
     
     public Product() {
         name = new String();
@@ -52,7 +52,6 @@ public class Product {
        return this.category;
    }
    
-   //Price
    public void setPrice(double price){
        this.price = price;
    }
@@ -61,13 +60,12 @@ public class Product {
        return this.price;
    }
    
-   //inStock
-   public void setInStock(int stock){
-       this.inStock = stock;
+   public void setQuantity(int q){
+       this.quantity = q;
    }
    
-   public int getInStock(){
-       return this.inStock;
+   public int getQuantity(){
+       return this.quantity;
    }
    
    public static boolean isInteger(String input) {
@@ -79,26 +77,21 @@ public class Product {
         }
     }
    
-    public static Boolean addBill(Product p){
-        if(productExists(p)){
-            return false;
-        }
+    public static void addProduct(Product p){
         allProducts.add(p);
-        return true;
     }
     
-    //
-    public static void deleteBill(Product p){
+    public static void deleteProduct(Product p){
         allProducts.remove(p);
     }
     
-    public static void updateBill(int index, Product p){
+    public static void updateProduct(int index, Product p){
         allProducts.set(index, p);
     }
     
-   public static Boolean productExists(Product product){
+   public static Boolean productExists(String pName){
        for(int i=0; i<allProducts.size(); i++){
-           if(product.getName().equals(allProducts.get(i).getName())){
+           if(pName.equals(allProducts.get(i).getName())){
                return true;
            }
        }
@@ -121,4 +114,25 @@ public class Product {
        }
        return errorMessage; 
    }
+   
+    public static int lookupProduct(String searchTerm){
+        boolean isFound = false;
+        int index = 0;
+        for (int i = 0; i < allProducts.size(); i++) {
+            if (searchTerm.equalsIgnoreCase(allProducts.get(i).getName())) {
+                index = i;
+                isFound = true;
+            }
+        }
+        if (isFound == true) {
+            System.out.println("Product found");
+            return index;
+            
+        } else {
+            System.out.println("No product found.");
+            return -1;
+        }
+       
+    }
+    
 }

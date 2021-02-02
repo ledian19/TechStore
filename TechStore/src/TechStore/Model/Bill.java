@@ -16,7 +16,6 @@ public class Bill implements Serializable {
     private String username;
     private Date dateAdded;
     
-    //Constructor
     public Bill() {
         name = new String();
     }
@@ -45,7 +44,6 @@ public class Bill implements Serializable {
         return this.username;
     }
     
-    //price
     public void setPrice(double price){
         this.price = price;
     }
@@ -54,7 +52,6 @@ public class Bill implements Serializable {
         return this.price;
     }
     
-    //total
     public void setTotal(double total){
         this.total = total;
     }
@@ -63,7 +60,6 @@ public class Bill implements Serializable {
         return this.total;
     }
     
-    //billId
     public void setQuantity(int q){
         this.quantity = q;
     }
@@ -75,12 +71,11 @@ public class Bill implements Serializable {
     public static ObservableList<Bill> getAllBills () {
         return allBills;
     }
-    //
+
     public static void addBill(Bill bill){
         allBills.add(bill);
     }
     
-    //
     public static void deleteBill(Bill bill){
         allBills.remove(bill);
     }
@@ -122,11 +117,11 @@ public class Bill implements Serializable {
             }
         }
         if (isFound == true) {
-            System.out.println("Part found");
+            System.out.println("Bill found");
             return index;
             
         } else {
-            System.out.println("No parts found.");
+            System.out.println("No bills found.");
             return -1;
         }
        

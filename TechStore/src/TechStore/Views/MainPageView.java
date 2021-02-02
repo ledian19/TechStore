@@ -3,6 +3,8 @@ package TechStore.Views;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -11,6 +13,9 @@ import javafx.scene.text.Font;
 
 public abstract class MainPageView extends AnchorPane {
 
+    protected final TabPane tabPane;
+    protected final Tab trxTab;
+    protected final AnchorPane anchorPane;
     protected final AnchorPane transactionsAnchor;
     protected final Label lblProducts1;
     protected final TableView tvTransactions;
@@ -25,24 +30,27 @@ public abstract class MainPageView extends AnchorPane {
     protected final Button btnModifyTransaction;
     protected final Button btnTransactionDelete;
     protected final Button btnGenerateStatistics;
+    protected final Tab productsTab;
+    protected final AnchorPane anchorPane0;
     protected final AnchorPane productsAnchor;
     protected final Label lblParts;
     protected final TableView tvProducts;
-    protected final TableColumn productIdColumn;
+    protected final TableColumn productCategoryColumn;
     protected final TableColumn productsNameColumn;
     protected final TableColumn productPriceColumn;
     protected final TableColumn productStockColumn;
     protected final TextField txtProductsSearch;
     protected final Button btnProductsSearch;
-    protected final ButtonBar buttonBar0;
     protected final Button btnProductsAdd;
     protected final Button btnPartDelete;
     protected final Button btnProductsModify;
-    protected final Label label;
+    protected final Button btnGenerateProductsStatistics;
+    protected final Tab usersTab;
+    protected final AnchorPane anchorPane1;
     protected final AnchorPane employeesAnchor;
     protected final Label lblProducts;
     protected final TableView tvEmployees;
-    protected final TableColumn employeeIdColumn;
+    protected final TableColumn employeeUsernameColumn;
     protected final TableColumn employeeNameColumn;
     protected final TableColumn employeeRoleColumn;
     protected final TableColumn employeeSalaryColumn;
@@ -51,14 +59,17 @@ public abstract class MainPageView extends AnchorPane {
     protected final TableColumn employeeBirthdayColumn;
     protected final TextField txtEmployeeSearch;
     protected final Button btnEmployeesSearch;
-    protected final ButtonBar buttonBar1;
     protected final Button btnEmployeeAdd;
     protected final Button btnEmployeeModify;
     protected final Button btnEmployeeDelete;
+    protected final Label label;
     protected final Button btnLogout;
 
     public MainPageView(int userLevel) {
 
+        tabPane = new TabPane();
+        trxTab = new Tab();
+        anchorPane = new AnchorPane();
         transactionsAnchor = new AnchorPane();
         lblProducts1 = new Label();
         tvTransactions = new TableView();
@@ -73,24 +84,27 @@ public abstract class MainPageView extends AnchorPane {
         btnModifyTransaction = new Button();
         btnTransactionDelete = new Button();
         btnGenerateStatistics = new Button();
+        productsTab = new Tab();
+        anchorPane0 = new AnchorPane();
         productsAnchor = new AnchorPane();
         lblParts = new Label();
         tvProducts = new TableView();
-        productIdColumn = new TableColumn();
+        productCategoryColumn = new TableColumn();
         productsNameColumn = new TableColumn();
         productPriceColumn = new TableColumn();
         productStockColumn = new TableColumn();
         txtProductsSearch = new TextField();
         btnProductsSearch = new Button();
-        buttonBar0 = new ButtonBar();
         btnProductsAdd = new Button();
         btnPartDelete = new Button();
         btnProductsModify = new Button();
-        label = new Label();
+        btnGenerateProductsStatistics = new Button();
+        usersTab = new Tab();
+        anchorPane1 = new AnchorPane();
         employeesAnchor = new AnchorPane();
         lblProducts = new Label();
         tvEmployees = new TableView();
-        employeeIdColumn = new TableColumn();
+        employeeUsernameColumn = new TableColumn();
         employeeNameColumn = new TableColumn();
         employeeRoleColumn = new TableColumn();
         employeeSalaryColumn = new TableColumn();
@@ -99,33 +113,42 @@ public abstract class MainPageView extends AnchorPane {
         employeeBirthdayColumn = new TableColumn();
         txtEmployeeSearch = new TextField();
         btnEmployeesSearch = new Button();
-        buttonBar1 = new ButtonBar();
         btnEmployeeAdd = new Button();
         btnEmployeeModify = new Button();
         btnEmployeeDelete = new Button();
+        label = new Label();
         btnLogout = new Button();
 
         setId("AnchorPane");
-        setPrefHeight(870.0);
+        setPrefHeight(500.0);
         setPrefWidth(1123.0);
 
-        transactionsAnchor.setLayoutX(48.0);
-        transactionsAnchor.setLayoutY(85.0);
-        transactionsAnchor.setPrefHeight(332.0);
-        transactionsAnchor.setPrefWidth(1030.0);
+        tabPane.setLayoutX(25.0);
+        tabPane.setLayoutY(75.0);
+        tabPane.setPrefHeight(395.0);
+        tabPane.setPrefWidth(1080.0);
+        tabPane.setTabClosingPolicy(javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        trxTab.setText("Transactions");
+
+        anchorPane.setMinHeight(0.0);
+        anchorPane.setMinWidth(0.0);
+        anchorPane.setPrefHeight(732.0);
+        anchorPane.setPrefWidth(1058.0);
+
+        transactionsAnchor.setLayoutX(7.0);
+        transactionsAnchor.setLayoutY(21.0);
+        transactionsAnchor.setPrefHeight(353.0);
+        transactionsAnchor.setPrefWidth(1060.0);
         transactionsAnchor.setStyle("-fx-background-color: white;");
 
         lblProducts1.setLayoutX(14.0);
         lblProducts1.setLayoutY(14.0);
         lblProducts1.setText("Transactions");
 
-        tvTransactions.setLayoutX(14.0);
         tvTransactions.setLayoutY(39.0);
         tvTransactions.setPrefHeight(212.0);
-        tvTransactions.setPrefWidth(996.0);
-
-        billTotalColumn.setPrefWidth(75.0);
-        billTotalColumn.setText("Total");
+        tvTransactions.setPrefWidth(1038.0);
 
         billProductNameColumn.setPrefWidth(75.0);
         billProductNameColumn.setText("Product Name");
@@ -135,15 +158,18 @@ public abstract class MainPageView extends AnchorPane {
 
         billQuantityColumn.setPrefWidth(75.0);
         billQuantityColumn.setText("Quantity");
+
+        billTotalColumn.setPrefWidth(75.0);
+        billTotalColumn.setText("Total");
         tvTransactions.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        txtTransactionSearch.setLayoutX(789.0);
-        txtTransactionSearch.setLayoutY(10.0);
+        txtTransactionSearch.setLayoutX(817.0);
+        txtTransactionSearch.setLayoutY(9.0);
         txtTransactionSearch.setPrefHeight(25.0);
         txtTransactionSearch.setPrefWidth(222.0);
 
-        btnProductsSearch1.setLayoutX(720.0);
-        btnProductsSearch1.setLayoutY(10.0);
+        btnProductsSearch1.setLayoutX(748.0);
+        btnProductsSearch1.setLayoutY(9.0);
         btnProductsSearch1.setMnemonicParsing(false);
         btnProductsSearch1.setOnAction(this::handleTransactionSearch);
         btnProductsSearch1.setText("Search");
@@ -176,11 +202,18 @@ public abstract class MainPageView extends AnchorPane {
         btnGenerateStatistics.setMnemonicParsing(false);
         btnGenerateStatistics.setOnAction(this::handleGenerateStatistics);
         btnGenerateStatistics.setText("Generate Statistics");
+        trxTab.setContent(anchorPane);
 
-        productsAnchor.setLayoutX(50.0);
-        productsAnchor.setLayoutY(454.0);
-        productsAnchor.setPrefHeight(332.0);
-        productsAnchor.setPrefWidth(495.0);
+        productsTab.setText("Products");
+
+        anchorPane0.setMinHeight(0.0);
+        anchorPane0.setMinWidth(0.0);
+        anchorPane0.setPrefHeight(180.0);
+        anchorPane0.setPrefWidth(200.0);
+
+        productsAnchor.setLayoutY(14.0);
+        productsAnchor.setPrefHeight(370.0);
+        productsAnchor.setPrefWidth(1080.0);
         productsAnchor.setStyle("-fx-background-color: white;");
 
         lblParts.setLayoutX(14.0);
@@ -189,13 +222,13 @@ public abstract class MainPageView extends AnchorPane {
         lblParts.setPrefWidth(54.0);
         lblParts.setText("Products");
 
-        tvProducts.setLayoutX(14.0);
+        tvProducts.setLayoutX(6.0);
         tvProducts.setLayoutY(39.0);
         tvProducts.setPrefHeight(212.0);
-        tvProducts.setPrefWidth(463.0);
+        tvProducts.setPrefWidth(1073.0);
 
-        productIdColumn.setPrefWidth(75.0);
-        productIdColumn.setText("Product ID");
+        productCategoryColumn.setPrefWidth(75.0);
+        productCategoryColumn.setText("Category");
 
         productsNameColumn.setPrefWidth(75.0);
         productsNameColumn.setText("Product Name");
@@ -207,65 +240,65 @@ public abstract class MainPageView extends AnchorPane {
         productStockColumn.setText("Stock");
         tvProducts.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        txtProductsSearch.setLayoutX(229.0);
-        txtProductsSearch.setLayoutY(10.0);
+        txtProductsSearch.setLayoutX(818.0);
+        txtProductsSearch.setLayoutY(9.0);
         txtProductsSearch.setPrefHeight(25.0);
         txtProductsSearch.setPrefWidth(248.0);
 
-        btnProductsSearch.setLayoutX(160.0);
-        btnProductsSearch.setLayoutY(10.0);
+        btnProductsSearch.setLayoutX(749.0);
+        btnProductsSearch.setLayoutY(9.0);
         btnProductsSearch.setMnemonicParsing(false);
         btnProductsSearch.setOnAction(this::handleProductsSearch);
         btnProductsSearch.setText("Search");
 
-        buttonBar0.setLayoutX(212.0);
-        buttonBar0.setLayoutY(205.0);
-        buttonBar0.setPrefHeight(40.0);
-        buttonBar0.setPrefWidth(200.0);
-
-        btnProductsAdd.setLayoutX(248.0);
-        btnProductsAdd.setLayoutY(293.0);
+        btnProductsAdd.setLayoutX(848.0);
+        btnProductsAdd.setLayoutY(290.0);
         btnProductsAdd.setMnemonicParsing(false);
         btnProductsAdd.setOnAction(this::handleProductsAdd);
         btnProductsAdd.setText("Add");
 
-        btnPartDelete.setLayoutX(412.0);
-        btnPartDelete.setLayoutY(293.0);
+        btnPartDelete.setLayoutX(1012.0);
+        btnPartDelete.setLayoutY(290.0);
         btnPartDelete.setMnemonicParsing(false);
         btnPartDelete.setOnAction(this::handleProductsDelete);
         btnPartDelete.setText("Delete");
 
-        btnProductsModify.setLayoutX(326.0);
-        btnProductsModify.setLayoutY(293.0);
+        btnProductsModify.setLayoutX(926.0);
+        btnProductsModify.setLayoutY(290.0);
         btnProductsModify.setMnemonicParsing(false);
         btnProductsModify.setOnAction(this::handleProductsModify);
         btnProductsModify.setText("Modify");
 
-        label.setLayoutX(50.0);
-        label.setLayoutY(21.0);
-        label.setPrefHeight(40.0);
-        label.setPrefWidth(269.0);
-        label.setStyle("-fx-font-weight: bold;");
-        label.setText("TechStore Management System");
-        label.setFont(new Font(18.0));
+        btnGenerateProductsStatistics.setLayoutX(694.0);
+        btnGenerateProductsStatistics.setLayoutY(290.0);
+        btnGenerateProductsStatistics.setMnemonicParsing(false);
+        btnGenerateProductsStatistics.setOnAction(this::handleGenerateProductsStatistics);
+        btnGenerateProductsStatistics.setText("Generate Statistics");
+        productsTab.setContent(anchorPane0);
 
-        employeesAnchor.setLayoutX(580.0);
-        employeesAnchor.setLayoutY(454.0);
+        usersTab.setText("Users");
+
+        anchorPane1.setMinHeight(0.0);
+        anchorPane1.setMinWidth(0.0);
+        anchorPane1.setPrefHeight(362.0);
+        anchorPane1.setPrefWidth(1092.0);
+
+        employeesAnchor.setLayoutY(14.0);
         employeesAnchor.setPrefHeight(332.0);
-        employeesAnchor.setPrefWidth(495.0);
+        employeesAnchor.setPrefWidth(1080.0);
         employeesAnchor.setStyle("-fx-background-color: white;");
 
         lblProducts.setLayoutX(14.0);
         lblProducts.setLayoutY(14.0);
         lblProducts.setText("Employees");
 
-        tvEmployees.setLayoutX(14.0);
+        tvEmployees.setLayoutX(7.0);
         tvEmployees.setLayoutY(39.0);
         tvEmployees.setPrefHeight(212.0);
-        tvEmployees.setPrefWidth(463.0);
+        tvEmployees.setPrefWidth(1052.0);
 
-        employeeIdColumn.setPrefWidth(75.0);
-        employeeIdColumn.setText("E.ID");
+        employeeUsernameColumn.setPrefWidth(75.0);
+        employeeUsernameColumn.setText("Username");
 
         employeeNameColumn.setPrefWidth(75.0);
         employeeNameColumn.setText("Full Name");
@@ -286,39 +319,43 @@ public abstract class MainPageView extends AnchorPane {
         employeeBirthdayColumn.setText("Birthday");
         tvEmployees.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        txtEmployeeSearch.setLayoutX(255.0);
-        txtEmployeeSearch.setLayoutY(10.0);
+        txtEmployeeSearch.setLayoutX(837.0);
+        txtEmployeeSearch.setLayoutY(9.0);
         txtEmployeeSearch.setPrefHeight(25.0);
         txtEmployeeSearch.setPrefWidth(222.0);
 
-        btnEmployeesSearch.setLayoutX(186.0);
-        btnEmployeesSearch.setLayoutY(10.0);
+        btnEmployeesSearch.setLayoutX(768.0);
+        btnEmployeesSearch.setLayoutY(9.0);
         btnEmployeesSearch.setMnemonicParsing(false);
         btnEmployeesSearch.setOnAction(this::handleEmployeeSearch);
         btnEmployeesSearch.setText("Search");
 
-        buttonBar1.setLayoutX(212.0);
-        buttonBar1.setLayoutY(205.0);
-        buttonBar1.setPrefHeight(40.0);
-        buttonBar1.setPrefWidth(200.0);
-
-        btnEmployeeAdd.setLayoutX(251.0);
-        btnEmployeeAdd.setLayoutY(293.0);
+        btnEmployeeAdd.setLayoutX(825.0);
+        btnEmployeeAdd.setLayoutY(273.0);
         btnEmployeeAdd.setMnemonicParsing(false);
         btnEmployeeAdd.setOnAction(this::handleEmployeeAdd);
         btnEmployeeAdd.setText("Add");
 
-        btnEmployeeModify.setLayoutX(336.0);
-        btnEmployeeModify.setLayoutY(293.0);
+        btnEmployeeModify.setLayoutX(910.0);
+        btnEmployeeModify.setLayoutY(273.0);
         btnEmployeeModify.setMnemonicParsing(false);
         btnEmployeeModify.setOnAction(this::handleEmployeeModify);
         btnEmployeeModify.setText("Modify");
 
-        btnEmployeeDelete.setLayoutX(421.0);
-        btnEmployeeDelete.setLayoutY(293.0);
+        btnEmployeeDelete.setLayoutX(995.0);
+        btnEmployeeDelete.setLayoutY(273.0);
         btnEmployeeDelete.setMnemonicParsing(false);
         btnEmployeeDelete.setOnAction(this::handleEmployeeDelete);
         btnEmployeeDelete.setText("Delete");
+        usersTab.setContent(anchorPane1);
+
+        label.setLayoutX(50.0);
+        label.setLayoutY(21.0);
+        label.setPrefHeight(40.0);
+        label.setPrefWidth(269.0);
+        label.setStyle("-fx-font-weight: bold;");
+        label.setText("TechStore Management System");
+        label.setFont(new Font(18.0));
 
         btnLogout.setLayoutX(971.0);
         btnLogout.setLayoutY(21.0);
@@ -342,20 +379,22 @@ public abstract class MainPageView extends AnchorPane {
         transactionsAnchor.getChildren().add(btnModifyTransaction);
         transactionsAnchor.getChildren().add(btnTransactionDelete);
         transactionsAnchor.getChildren().add(btnGenerateStatistics);
+        anchorPane.getChildren().add(transactionsAnchor);
         productsAnchor.getChildren().add(lblParts);
-        tvProducts.getColumns().add(productIdColumn);
+        tvProducts.getColumns().add(productCategoryColumn);
         tvProducts.getColumns().add(productsNameColumn);
         tvProducts.getColumns().add(productPriceColumn);
         tvProducts.getColumns().add(productStockColumn);
         productsAnchor.getChildren().add(tvProducts);
         productsAnchor.getChildren().add(txtProductsSearch);
         productsAnchor.getChildren().add(btnProductsSearch);
-        productsAnchor.getChildren().add(buttonBar0);
         productsAnchor.getChildren().add(btnProductsAdd);
         productsAnchor.getChildren().add(btnPartDelete);
         productsAnchor.getChildren().add(btnProductsModify);
+        productsAnchor.getChildren().add(btnGenerateProductsStatistics);
+        anchorPane0.getChildren().add(productsAnchor);
         employeesAnchor.getChildren().add(lblProducts);
-        tvEmployees.getColumns().add(employeeIdColumn);
+        tvEmployees.getColumns().add(employeeUsernameColumn);
         tvEmployees.getColumns().add(employeeNameColumn);
         tvEmployees.getColumns().add(employeeRoleColumn);
         tvEmployees.getColumns().add(employeeSalaryColumn);
@@ -365,20 +404,23 @@ public abstract class MainPageView extends AnchorPane {
         employeesAnchor.getChildren().add(tvEmployees);
         employeesAnchor.getChildren().add(txtEmployeeSearch);
         employeesAnchor.getChildren().add(btnEmployeesSearch);
-        employeesAnchor.getChildren().add(buttonBar1);
         employeesAnchor.getChildren().add(btnEmployeeAdd);
         employeesAnchor.getChildren().add(btnEmployeeModify);
         employeesAnchor.getChildren().add(btnEmployeeDelete);
-        getChildren().add(label);
-        getChildren().add(btnLogout);
-        if(userLevel==1){
-            getChildren().add(productsAnchor);
-            getChildren().add(employeesAnchor);
+        anchorPane1.getChildren().add(employeesAnchor);
+        
+        tabPane.getTabs().add(trxTab);
+        if (userLevel==1){
+            tabPane.getTabs().add(productsTab);
+            tabPane.getTabs().add(usersTab);
         }
         else if (userLevel==2){
-            getChildren().add(productsAnchor);
+            tabPane.getTabs().add(productsTab);
         }
-        getChildren().add(transactionsAnchor);
+
+        getChildren().add(tabPane);
+        getChildren().add(label);
+        getChildren().add(btnLogout);
 
     }
 
@@ -399,6 +441,8 @@ public abstract class MainPageView extends AnchorPane {
     protected abstract void handleProductsDelete(javafx.event.ActionEvent actionEvent);
 
     protected abstract void handleProductsModify(javafx.event.ActionEvent actionEvent);
+
+    protected abstract void handleGenerateProductsStatistics(javafx.event.ActionEvent actionEvent);
 
     protected abstract void handleEmployeeSearch(javafx.event.ActionEvent actionEvent);
 

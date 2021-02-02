@@ -4,6 +4,7 @@ import static TechStore.Controller.MainPageController.writeTransactionsToFile;
 import TechStore.Model.Bill;
 import static TechStore.Model.Bill.allBills;
 import static TechStore.Model.Bill.isBillValid;
+import static TechStore.Model.Product.productExists;
 import TechStore.Model.User;
 import TechStore.Views.AddTransactionView;
 import java.net.URL;
@@ -22,7 +23,7 @@ import javafx.stage.Stage;
 public class AddTransactionController extends AddTransactionView implements Initializable {
 
     String exceptionMessage;
-    private User user;
+    private final User user;
 
     public AddTransactionController(User user) {
         this.user = user;
@@ -46,12 +47,12 @@ public class AddTransactionController extends AddTransactionView implements Init
 
     @Override
     protected void handleTransactionSave(ActionEvent event) {
-        String billName = txtProductName.getText();
+        String name = txtProductName.getText();
         String billPrice = txtPrice.getText();
         String billQuantity = txtQuantity.getText();
 
         try {
-            exceptionMessage = isBillValid(billName, Double.parseDouble(billPrice), Integer.parseInt(billQuantity));
+            exceptionMessage = isBillValid(name, Double.parseDouble(billPrice), Integer.parseInt(billQuantity));
             if (exceptionMessage.length() > 0) {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Error");
@@ -59,9 +60,16 @@ public class AddTransactionController extends AddTransactionView implements Init
                 alert.setContentText(exceptionMessage);
                 alert.showAndWait();
                 exceptionMessage = "";
-            } else {
+            }
+            else if (!productExists(name)){
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Error adding bill. Product does not exist");
+                alert.showAndWait();
+            }
+            else {
                 Bill tempBill = new Bill();
-                tempBill.setName(billName);
+                tempBill.setName(name);
                 tempBill.setPrice(Double.parseDouble(billPrice));
                 tempBill.setQuantity(Integer.parseInt(billQuantity));
                 tempBill.setTotal(Double.parseDouble(billPrice) * Integer.parseInt(billQuantity));

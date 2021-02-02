@@ -1,7 +1,6 @@
 package TechStore;
 
 import TechStore.Controller.LoginViewController;
-import TechStore.Controller.MainPageController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
